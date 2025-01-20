@@ -1,0 +1,64 @@
+name: Build and Deploy
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+env:
+  WEBSITE_HOST: practice.huynhkhanh.com
+
+on:
+  push:
+    branches: [ "**" ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install npm
+        run: npm install
+
+      - name: Build with Vite
+        run: npm run build
+
+      - name: Set TIMESTAMP
+        run: echo "TIMESTAMP=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+      - name: Backup current website if not empty
+        run: |
+          if sshpass -p "${{ secrets.HDK_PWD_UPLOADUSER }}" ssh -o StrictHostKeyChecking=no ${{ secrets.HDK_USER_UPLOADUSER }}@${{ secrets.HDK_HOST }} "ls /var/www/${{ env.WEBSITE_HOST }}/* | grep ."; then
+            sshpass -p "${{ secrets.HDK_PWD_UPLOADUSER }}" ssh -o StrictHostKeyChecking=no ${{ secrets.HDK_USER_UPLOADUSER }}@${{ secrets.HDK_HOST }} "mkdir -p /var/www/${{ env.WEBSITE_HOST }}_backup_${{ env.TIMESTAMP }} && mv /var/www/${{ env.WEBSITE_HOST }}/* /var/www/${{ env.WEBSITE_HOST }}_backup_${{ env.TIMESTAMP }}/"
+          else
+            echo "Directory is empty, skipping backup and create folder."
+            sshpass -p "${{ secrets.HDK_PWD_UPLOADUSER }}" ssh -o StrictHostKeyChecking=no ${{ secrets.HDK_USER_UPLOADUSER }}@${{ secrets.HDK_HOST }} "mkdir -p /var/www/${{ env.WEBSITE_HOST }}"
+          fi
+
+      - name: Copy files to remote server
+        id: copy_files
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+          sshpass -p "${{ secrets.HDK_PWD_UPLOADUSER }}" scp -o StrictHostKeyChecking=no -r ./dist/* ${{ secrets.HDK_USER_UPLOADUSER }}@${{ secrets.HDK_HOST }}:/var/www/${{ env.WEBSITE_HOST }}
+
+      - name: Undo backup if copy fails
+        if: failure() && steps.copy_files.outcome == 'failure'
+        run: |
+          sshpass -p "${{ secrets.HDK_PWD_UPLOADUSER }}" ssh -o StrictHostKeyChecking=no ${{ secrets.HDK_USER_UPLOADUSER }}@${{ secrets.HDK_HOST }} "mv /var/www/${{ env.WEBSITE_HOST }}_backup_${{ env.TIMESTAMP }}/* /var/www/${{ env.WEBSITE_HOST }} && rmdir /var/www/${{ env.WEBSITE_HOST }}_backup_${{ env.TIMESTAMP }}/"
