@@ -1,16 +1,14 @@
 import './App.css'
-import {useEffect} from "react";
+import {Footer} from "./components/Footer.jsx";
+import {Header} from "./components/Header.jsx";
+import {PageRoutes} from "./routes/PageRoutes.jsx";
 
-function App() {
-    useEffect(() => {
-        document.title = process.env.REACT_APP_NAME;
-    }, []);
-
-  return (
-    <>
-      <h1>ReactJs Template</h1>
-    </>
-  )
+export function App() {
+    return (
+        <div>
+            <Header/>
+            <PageRoutes/>
+            <Footer/>
+        </div>
+    )
 }
-
-export default App
