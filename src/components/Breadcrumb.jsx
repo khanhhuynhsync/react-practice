@@ -9,7 +9,7 @@ export function Breadcrumb({items}) {
                         {item.active ? (
                             item.label
                         ) : (
-                            <NavLink className="nav-link" to={item.path}>{item.label}</NavLink>
+                            <NavLink className="nav-link ps-3" to={item.path}>{item.label}</NavLink>
                         )}
                     </li>
                 ))}

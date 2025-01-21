@@ -8,7 +8,7 @@ export function Blog() {
         {label: "Blog", path: "/blog", active: true}
     ];
     return (
-        <div className="container-md">
+        <div className="container-md my-3">
             <Breadcrumb items={breadcrumbItems}/>
             <h1>Blog</h1>
             <p>Welcome to the Blog page</p>

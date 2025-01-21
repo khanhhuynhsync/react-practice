@@ -8,7 +8,7 @@ export function About() {
         {label: "About", path: "/about", active: true}
     ];
     return (
-        <div className="container-md">
+        <div className="container-md my-3">
             <Breadcrumb items={breadcrumbItems}/>
             <h1>About</h1>
             <p>Welcome to the About page</p>
