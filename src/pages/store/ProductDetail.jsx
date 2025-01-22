@@ -1,4 +1,5 @@
-import {useParams} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {useNavigate, useParams} from "react-router-dom";
 
 import {Breadcrumb} from "../../components/Breadcrumb.jsx";
 import {CarouselImage} from "../../components/CarouselImage.jsx";
@@ -9,6 +10,8 @@ export function ProductDetail() {
     const {id} = useParams();
     const productUrl = `${process.env.REACT_APP_DUMMY_API_URL}/products/${id}`;
     const {isPending, isError, data, error} = useFetch(productUrl);
+    const cart = useSelector(state => state.cart);
+    const navigate = useNavigate();
 
     if (isPending) {
         return (
@@ -29,9 +32,27 @@ export function ProductDetail() {
         {label: data.title, path: `/products/${id}`, active: true}
     ];
 
+    const gotoCart = () => {
+        navigate("/cart");
+    }
+
     return (
         <div className="container-md my-3">
-            <Breadcrumb items={breadcrumbItems}/>
+            <div className="row">
+                <div className="col">
+                    <Breadcrumb items={breadcrumbItems}/>
+                </div>
+                <div className="col text-end">
+                    <button type="button" className="btn btn-primary position-relative" onClick={gotoCart}>
+                        Cart
+                        <span
+                            className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {cart.cartItems ? cart.cartItems.length : 0}
+                            <span className="visually-hidden">Items in cart</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
             <h1>{data.title}</h1>
             <div className="row justify-content-center">
                 <div className="col-md w-50">
