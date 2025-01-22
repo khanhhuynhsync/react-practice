@@ -1,4 +1,5 @@
 import {useDispatch} from "react-redux";
+import {Link} from "react-router-dom";
 
 import {ImageLoading} from "../../components/ImageLoading.jsx";
 import {decreaseQuantity, increaseQuantity, remove} from "../../store/cartSlice.js";
@@ -12,7 +13,9 @@ export function CartItem({cartItem}) {
                 <ImageLoading src={cartItem.product.thumbnail} alt={cartItem.product.title} className="w-50"/>
             </div>
             <div className="col-sm text-start">
-                <h5 className="">{cartItem.product.title}</h5>
+                <Link className="nav-link" to={`/products/${cartItem.product.id}`}>
+                    <h5 className="">{cartItem.product.title}</h5>
+                </Link>
             </div>
             <div className="col-sm text-start">
                 <div className="">Price: ${cartItem.product.price}</div>
