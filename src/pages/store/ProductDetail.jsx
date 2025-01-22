@@ -2,11 +2,11 @@ import {useParams} from "react-router-dom";
 
 import {Breadcrumb} from "../../components/Breadcrumb.jsx";
 import {CarouselImage} from "../../components/CarouselImage.jsx";
-import {useFetch} from "../../hooks/useProductApi.js";
+import {useFetch} from "../../hooks/useCRUD.js";
 
 export function ProductDetail() {
     const {id} = useParams();
-    const productUrl = `${process.env.REACT_APP_PRODUCT_API_URL}/products/${id}`;
+    const productUrl = `${process.env.REACT_APP_DUMMY_API_URL}/products/${id}`;
     const {isPending, isError, data, error} = useFetch(productUrl);
 
     if (isPending) {

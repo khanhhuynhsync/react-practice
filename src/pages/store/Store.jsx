@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import {ProductOverview} from "./ProductOverview.jsx";
 import {Breadcrumb} from "../../components/Breadcrumb.jsx";
 import {DataLoading} from "../../components/DataLoading.jsx";
-import {useFetch} from "../../hooks/useProductApi.js";
+import {useFetch} from "../../hooks/useCRUD.js";
 import {useTitle} from "../../hooks/useTitle.js";
 
 export function Store() {
@@ -14,7 +14,7 @@ export function Store() {
     const cart = useSelector(state => state.cart);
     const navigate = useNavigate();
 
-    const [productUrl] = useState(`${process.env.REACT_APP_PRODUCT_API_URL}/products`);
+    const [productUrl] = useState(`${process.env.REACT_APP_DUMMY_API_URL}/products`);
     const {isPending, data} = useFetch(productUrl);
     const breadcrumbItems = [
         {label: "Home", path: "/"},
