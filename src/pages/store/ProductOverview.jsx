@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 
 import {ImageLoading} from "../../components/ImageLoading.jsx";
+import {Rating} from "../../components/Rating.jsx";
 import {add, remove} from "../../store/cartSlice.js";
 
 export function ProductOverview({product}) {
@@ -37,6 +38,9 @@ export function ProductOverview({product}) {
                     <div className="card-text">Rating: {product.rating}</div>
                     <div className={`card-text ${stockStatusCss}`}>
                         {product.availabilityStatus}
+                    </div>
+                    <div className="card-text">
+                        <Rating rating={product.rating}/>
                     </div>
                 </div>
             </div>

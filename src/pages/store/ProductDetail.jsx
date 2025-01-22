@@ -2,6 +2,7 @@ import {useParams} from "react-router-dom";
 
 import {Breadcrumb} from "../../components/Breadcrumb.jsx";
 import {CarouselImage} from "../../components/CarouselImage.jsx";
+import {Rating} from "../../components/Rating.jsx";
 import {useFetch} from "../../hooks/useCRUD.js";
 
 export function ProductDetail() {
@@ -60,6 +61,7 @@ export function ProductDetail() {
                                 <p>{new Date(review.date).toLocaleDateString()}</p>
                             </div>
                             <div className="col-md">
+                                <Rating rating={review.rating}/>
                                 <p>{review.comment}</p>
                             </div>
                             <hr/>
