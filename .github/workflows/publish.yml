@@ -5,7 +5,7 @@ name: Build and Deploy
 # separate terms of service, privacy policy, and support
 # documentation.
 env:
-  WEBSITE_HOST: practice.huynhkhanh.com
+  WEBSITE_HOST: practice.hdk.io.vn
 
 on:
   push:
